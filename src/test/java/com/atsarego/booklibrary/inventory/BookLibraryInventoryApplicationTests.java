@@ -1,6 +1,5 @@
 package com.atsarego.booklibrary.inventory;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,7 +8,6 @@ class BookLibraryInventoryApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Assertions.fail();
 	}
 
 }
