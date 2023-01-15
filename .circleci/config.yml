@@ -11,7 +11,7 @@ executors:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  build:
+  build-and-test:
     executor: jdk-executor
     steps:
       - restore_cache:
@@ -36,23 +36,14 @@ jobs:
       - run:
           name: Compile
           command: mvn compile
+      - run:
+          name: Test
+          command: mvn test
       - save_cache:
           name: Saving Maven Package Cache
           key: mvn-deps-v1-{{ .Branch }}
           paths:
             - ~/.m2/repository
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - ./
-  test:
-    executor: jdk-executor
-    steps:
-      - attach_workspace:
-          at: ./
-      - run:
-          name: Test
-          command: mvn test
 
 
 # Invoke jobs via workflows
@@ -61,7 +52,4 @@ workflows:
   build-and-test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
 
