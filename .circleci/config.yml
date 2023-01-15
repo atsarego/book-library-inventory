@@ -2,28 +2,58 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+executors:
+  jdk-executor:
+    docker:
+      - image: cimg/openjdk:17.0.5
+    resource_class: small
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
-    docker:
-      - image: cimg/openjdk:17.0.5
-    resource_class: small
+    executor: jdk-executor
     steps:
+      - restore_cache:
+          name: Restoring Source
+          keys:
+            - source-v1-{{ .Branch }}
+            - source-v1-
       - checkout
+      - run:
+          name: Preparing Source To Caching
+          command: git gc
+      - save_cache:
+          name: Saving Source
+          key: source-v1-{{ .Branch }}
+          paths:
+            - .git
       - restore_cache:
           name: Restoring Maven Package Cache
           keys:
-            - v1-mvn-deps-{{ .Branch }}
-            - v1-mvn-deps-
+            - mvn-deps-v1-{{ .Branch }}
+            - mvn-deps-v1-
       - run:
           name: Compile
           command: mvn compile
       - save_cache:
           name: Saving Maven Package Cache
-          key: 'v1-mvn-deps-{{ .Branch }}'
+          key: mvn-deps-v1-{{ .Branch }}
           paths:
             - ~/.m2/repository
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - src
+            - target
+  test:
+    executor: jdk-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Test
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -31,3 +61,4 @@ workflows:
   build-and-test:
     jobs:
       - build
+      - test
