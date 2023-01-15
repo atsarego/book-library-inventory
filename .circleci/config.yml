@@ -11,14 +11,19 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - restore-cache:
+      - restore_cache:
           name: Restoring Maven Package Cache
           keys:
-            - v1-mvn-deps-{{ checksum "pom.xml" }}
-            - v1-mvn-deps-
+            - v1-mvn-deps-{{ .Branch }}
+            - v1-mvn-deps-main
       - run:
           name: Compile
           command: mvn compile
+      - save_cache:
+          - name: Saving Maven Package Cache
+            key: 'v1-mvn-deps-{{ .Branch }}'
+            paths:
+              - ~/.m2/repository
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
