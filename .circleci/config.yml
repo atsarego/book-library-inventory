@@ -53,6 +53,7 @@ jobs:
           at: ./
       - run:
           name: Test
+          command: mvn test
 
 
 # Invoke jobs via workflows
