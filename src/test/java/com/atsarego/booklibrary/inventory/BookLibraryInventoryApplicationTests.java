@@ -9,7 +9,7 @@ class BookLibraryInventoryApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Assertions.assertFalse(false);
+		Assertions.fail();
 	}
 
 }
