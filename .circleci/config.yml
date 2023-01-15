@@ -15,7 +15,7 @@ jobs:
           name: Restoring Maven Package Cache
           keys:
             - v1-mvn-deps-{{ .Branch }}
-            - v1-mvn-deps-main
+            - v1-mvn-deps-
       - run:
           name: Compile
           command: mvn compile
