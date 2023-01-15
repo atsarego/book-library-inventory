@@ -36,6 +36,8 @@ jobs:
       - run:
           name: Compile And Test
           command: mvn test
+      - store_test_results:
+          path: target/surefire-reports
       - save_cache:
           name: Saving Maven Package Cache
           key: mvn-deps-v2-{{ .Branch }}
