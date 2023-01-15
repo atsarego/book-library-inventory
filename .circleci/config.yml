@@ -34,10 +34,7 @@ jobs:
             - mvn-deps-v1-{{ .Branch }}
             - mvn-deps-v1-
       - run:
-          name: Compile
-          command: mvn compile
-      - run:
-          name: Test
+          name: Compile And Test
           command: mvn test
       - save_cache:
           name: Saving Maven Package Cache
