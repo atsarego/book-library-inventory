@@ -13,4 +13,9 @@ public interface BookService {
 
     @Nonnull
     Integer addBook(@Nonnull BookDto book);
+
+    @Nonnull
+    BookDto updateBook(@Nonnull Integer id, @Nonnull BookDto book);
+
+    void deleteBook(@Nonnull Integer id);
 }

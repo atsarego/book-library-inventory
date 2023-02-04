@@ -3,9 +3,12 @@ package com.atsarego.booklibrary.inventory.controller;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,9 +64,7 @@ public class BookControllerTest {
 
         final String response = mockMvc.perform(get("/books/{id}", BOOK_1.getId()))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andReturn().getResponse().getContentAsString();
 
         assertThat(
                 objectMapper.readValue(response, BookDto.class),
@@ -91,5 +92,28 @@ public class BookControllerTest {
                         status().isCreated(),
                         content().string(Integer.toString(bookId))
                 );
+    }
+
+    @Test
+    public void updateBook() throws Exception {
+        when(bookService.updateBook(BOOK_1.getId(), BOOK_1)).thenReturn(BOOK_1);
+        final String response = mockMvc.perform(put("/books/{id}", BOOK_1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(BOOK_1)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(
+                objectMapper.readValue(response, BookDto.class),
+                is(BOOK_1)
+        );
+    }
+
+    @Test
+    public void removeBookTest() throws Exception {
+        final Integer bookId = 1;
+        mockMvc.perform(delete("/books/{id}", bookId))
+                .andExpect(status().isNoContent());
+        verify(bookService).deleteBook(bookId);
     }
 }

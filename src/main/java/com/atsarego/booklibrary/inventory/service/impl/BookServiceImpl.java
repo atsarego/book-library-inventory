@@ -16,13 +16,24 @@ public class BookServiceImpl implements BookService {
 
     @Nullable
     @Override
-    public BookDto getBook(@Nonnull Integer id) {
+    public BookDto getBook(@Nonnull final Integer id) {
         return null;
     }
 
     @Nonnull
     @Override
-    public Integer addBook(@Nonnull BookDto book) {
+    public Integer addBook(@Nonnull final BookDto book) {
         return null;
+    }
+
+    @Nonnull
+    @Override
+    public BookDto updateBook(@Nonnull final Integer id, @Nonnull final BookDto book) {
+        return null;
+    }
+
+    @Override
+    public void deleteBook(@Nonnull final Integer id) {
+
     }
 }
